@@ -6,7 +6,7 @@ require dirname(__FILE__,1).'/src/lib/api.php';
 $API = new API();
 
 if((!empty($_POST))&&(isset($_POST['logout']))){
-	unset($_SESSION['lsp']);
+	unset($_SESSION['mgmt']);
 	$API->Status = FALSE;
 }
 
@@ -272,9 +272,9 @@ if(!$API->Status){
 	            </table>
 	          </div>
 					</div>
-					<footer class="footer mt-auto py-3" style="padding:10px;background-color:#ccc;">
+					<footer class="footer mt-auto py-3 px-4" style="padding:10px;background-color:#ccc;">
 						<div class="float-right d-none d-sm-block">
-							<b>Version</b> 2.b.2020-09-23
+							<b>Version</b> <?=$API->Config['version']?>
 						</div>
 						<strong>Copyright &copy; 2020-<?= date('Y') ?> <a href="<?=$API->Config['copyright']['link']?>"><?=$API->Config['copyright']['text']?></a></strong> All rights reserved.
 					</footer>
