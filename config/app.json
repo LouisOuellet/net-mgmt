@@ -1,0 +1,10 @@
+{
+		"title": "Net MGMT",
+		"description": "Network Management Tool",
+		"banner": "Network Management Tool",
+		"version": "0.2020.10.13",
+		"copyright":{
+				"link": "https://laswitchtech.com",
+				"text": "Les Entreprises LaswitchTech"
+		}
+}

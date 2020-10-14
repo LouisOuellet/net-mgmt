@@ -1,2 +1,2 @@
-# net-mgmt
-Network Management Tool
+# Net-MGMT
+Net-MGMT is a network management tool.
