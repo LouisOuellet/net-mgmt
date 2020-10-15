@@ -5,12 +5,12 @@ require dirname(__FILE__,1).'/src/lib/api.php';
 
 $API = new API();
 
-if((!empty($_POST))&&(isset($_POST['logout']))){
+if((!empty($_GET))&&(isset($_GET['logout']))){
 	unset($_SESSION['mgmt']);
-	$API->Status = FALSE;
+	$API->Login = FALSE;
 }
 
-if(!$API->Status){
+if(!$API->Login){
 	header('Location: http://'.$_SERVER['HTTP_HOST'].'/login.php');
 } else { ?>
 <!doctype html>
@@ -20,105 +20,86 @@ if(!$API->Status){
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta name="description" content="<?=$API->Config['description']?>">
 		<meta name="author" content="Louis Ouellet, https://github.com/LouisOuellet">
-		<title><?=$API->Config['title']?> | Panel</title>
+		<title><?=$API->Config['title']?> | Dashboard</title>
 		<link rel="shortcut icon" href="/dist/img/favicon.ico" />
-    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/dashboard/">
+    <!-- <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/dashboard/"> -->
     <!-- Bootstrap core CSS -->
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 		<!-- DataTables CSS -->
 		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
     <!-- Custom styles for this template -->
 		<link rel="stylesheet" type="text/css" href="./dist/css/panel.css">
+		<!-- Bootstrap -->
+    <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+		<!-- DataTable -->
+		<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+		<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+		<!-- FontAwesome -->
+		<script src="https://kit.fontawesome.com/4f8426d3cf.js" crossorigin="anonymous"></script>
   </head>
 
   <body>
-    <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-      <a class="navbar-brand col-sm-3 col-md-2 mr-0 p-2 bg-dark" href="">
+    <nav class="navbar navbar-<?=$API->Config['customization']['mode']?> sticky-top bg-<?=$API->Config['customization']['color']?> flex-md-nowrap p-0 shadow">
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0 p-2 bg-<?=$API->Config['customization']['color']?>" href="">
 				<img class="mr-2" src="/dist/img/logo.png" alt="" width="32" height="32">
 				<?=$API->Config['banner']?>
 			</a>
-      <input class="form-control form-control-dark w-100 py-4" type="text" placeholder="Search" aria-label="Search">
-			<form class="form-inline my-2 my-lg-0" method="post">
-      <ul class="navbar-nav px-3">
-        <li class="nav-item text-nowrap">
-          <button class="btn btn-outline-primary btn-sm ml-3 my-2 my-sm-0" type="submit" name="logout">Logout</button>
+			<form class="form-inline w-100">
+      	<input class="form-control form-control-<?=$API->Config['customization']['mode']?> py-4 w-100" type="text" placeholder="Search" aria-label="Search">
+			</form>
+      <ul class="navbar-nav">
+				<li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle px-4" href="http://example.com" id="profile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?=ucwords(str_replace('_',' ',str_replace('.',' ',$_SESSION['mgmt'])))?></a>
+          <div class="dropdown-menu dropdown-menu-right position-absolute" aria-labelledby="profile">
+            <a class="dropdown-item" href="?logout">Logout</a>
+          </div>
         </li>
       </ul>
-			</form>
     </nav>
 
     <div class="container-fluid">
       <div class="row">
-        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-          <div class="sidebar-sticky">
-            <ul class="nav flex-column">
+        <nav class="col-md-2 d-none d-md-block navbar navbar-<?=$API->Config['customization']['mode']?> bg-<?=$API->Config['customization']['mode']?> sidebar shadow">
+          <div class="sidebar-sticky px-4">
+            <ul class="navbar-nav flex-column">
               <li class="nav-item">
                 <a class="nav-link active" href="#">
-                  <span data-feather="home"></span>
-                  Dashboard <span class="sr-only">(current)</span>
+									<i class="fas fa-tachometer-alt mr-2"></i>
+                  Dashboard
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">
-                  <span data-feather="file"></span>
-                  Orders
+                  <i class="fas fa-desktop mr-2"></i>
+                  Devices
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">
-                  <span data-feather="shopping-cart"></span>
-                  Products
+                  <i class="fas fa-network-wired mr-2"></i>
+                  Network Interface Cards
+                </a>
+              </li>
+							<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+	              <span>Administration</span>
+	            </h6>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <i class="fas fa-users mr-2"></i>
+                  Users
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">
-                  <span data-feather="users"></span>
-                  Customers
+                  <i class="fas fa-user-friends mr-2"></i>
+                  Groups
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">
-                  <span data-feather="bar-chart-2"></span>
-                  Reports
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="layers"></span>
-                  Integrations
-                </a>
-              </li>
-            </ul>
-
-            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-              <span>Saved reports</span>
-              <a class="d-flex align-items-center text-muted" href="#">
-                <span data-feather="plus-circle"></span>
-              </a>
-            </h6>
-            <ul class="nav flex-column mb-2">
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="file-text"></span>
-                  Current month
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="file-text"></span>
-                  Last quarter
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="file-text"></span>
-                  Social engagement
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="file-text"></span>
-                  Year-end sale
+                  <i class="fas fa-shield-alt mr-2"></i>
+                  Roles
                 </a>
               </li>
             </ul>
@@ -284,18 +265,11 @@ if(!$API->Status){
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-		<!-- DataTable -->
-		<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
-		<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
 		<!-- Popper -->
     <script src="https://unpkg.com/@popperjs/core@2"></script>
 
     <!-- Icons -->
     <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
-		<script src="https://kit.fontawesome.com/4f8426d3cf.js" crossorigin="anonymous"></script>
     <script>
       feather.replace()
     </script>
